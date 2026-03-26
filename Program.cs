@@ -1,12 +1,46 @@
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+using bruno_backend.Services;
+using Serilog;
 
-var app = builder.Build();
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+        .Build())
+    .CreateLogger();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+try
+{
+    Log.Information("Starting Bruno Backend API");
 
-app.MapGet("/", () => "Hello World!");
+    var builder = WebApplication.CreateBuilder(args);
 
-app.Run();
+    // Add Serilog
+    builder.Host.UseSerilog();
+
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddHttpClient<IUtilsService, UtilsService>();
+
+    var app = builder.Build();
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    app.MapControllers();
+
+    app.MapGet("/", () => "Hello World!");
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

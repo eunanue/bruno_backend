@@ -51,6 +51,7 @@ dist/
 # =========================
 
 *.log
+Logs/
 
 # =========================
 
@@ -151,3 +152,5 @@ docker-compose.override.yml
 
 *.tmp
 *.temp
+
+.claude/*
