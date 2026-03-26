@@ -154,4 +154,103 @@ public class UtilsController : ControllerBase
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// Get fiscal regime catalog for a specific insurer (Persona Física)
+    /// </summary>
+    /// <param name="insurerId">Insurer ID</param>
+    /// <returns>Fiscal regime catalog data</returns>
+    [HttpGet("insurers/fiscal/{insurerId}")]
+    public async Task<IActionResult> GetFiscalRegime([FromRoute] string insurerId)
+    {
+        if (string.IsNullOrEmpty(insurerId))
+        {
+            return BadRequest(new { message = "insurerId is required" });
+        }
+
+        var result = await _utilsService.GetFiscalRegimeAsync(insurerId);
+
+        if (!result.Success)
+        {
+            if (result.Message?.Contains("token") == true || result.Message?.Contains("Authentication") == true)
+            {
+                return Unauthorized(result);
+            }
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Get fiscal regime catalog for a specific insurer and person type (Persona Moral)
+    /// </summary>
+    /// <param name="insurerId">Insurer ID (e.g., 4=GNP, 5=CHUBB, 27=CRABI, 34=HDI, 39=MAPFRE)</param>
+    /// <param name="personType">Person type identifier (e.g., 2 for Persona Moral)</param>
+    /// <returns>Fiscal regime catalog data</returns>
+    [HttpGet("insurers/fiscal/{insurerId}/person-type/{personType}")]
+    public async Task<IActionResult> GetFiscalRegimeByPersonType(
+        [FromRoute] string insurerId,
+        [FromRoute] string personType)
+    {
+        if (string.IsNullOrEmpty(insurerId))
+        {
+            return BadRequest(new { message = "insurerId is required" });
+        }
+
+        if (string.IsNullOrEmpty(personType))
+        {
+            return BadRequest(new { message = "personType is required" });
+        }
+
+
+
+        var result = await _utilsService.GetFiscalRegimeByPersonTypeAsync(insurerId, personType);
+
+        if (!result.Success)
+        {
+            if (result.Message?.Contains("token") == true || result.Message?.Contains("Authentication") == true)
+            {
+                return Unauthorized(result);
+            }
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Generate PDF or Image quote
+    /// </summary>
+    /// <param name="request">PDF quote request with package info, payment method, vehicle model, customer details, and download preferences</param>
+    /// <returns>Generated PDF or Image quote data</returns>
+    [HttpPost("alfred/pdfquote")]
+    public async Task<IActionResult> GeneratePdfQuote([FromBody] PdfQuoteRequestDto request)
+    {
+        if (request == null)
+        {
+            return BadRequest(new { message = "Request body is required" });
+        }
+
+        if (request.PackageId == 0 ||
+            request.WayToPay == 0 ||
+            string.IsNullOrEmpty(request.ModelString) ||
+            string.IsNullOrEmpty(request.Birthdate) ||
+            string.IsNullOrEmpty(request.FirstName) ||
+            string.IsNullOrEmpty(request.CirculationZipCode) ||
+            string.IsNullOrEmpty(request.Uuid) ||
+            request.MerchantId == 0)
+        {
+            return BadRequest(new { message = "All required fields must be provided (packageId, wayToPay, modelString, birthdate, firstName, circulationZipCode, uuid, merchantId)" });
+        }
+
+        var result = await _utilsService.GeneratePdfQuoteAsync(request);
+
+        if (!result.Success)
+        {
+            return StatusCode(500, result);
+        }
+
+        return Ok(result);
+    }
 }

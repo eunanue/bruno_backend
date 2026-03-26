@@ -9,4 +9,7 @@ public interface IUtilsService
     Task<SettlementsResponseDto> GetSettlementsByZipCodeAsync(string zipCode);
     Task<VinValidationResponseDto> ValidateVinAsync(string vin, string? token);
     Task<RfcGeneratorResponseDto> GenerateRfcAsync(RfcGeneratorRequestDto request);
+    Task<FiscalRegimeResponseDto> GetFiscalRegimeAsync(string insurerId);
+    Task<FiscalRegimeResponseDto> GetFiscalRegimeByPersonTypeAsync(string insurerId, string personType);
+    Task<PdfQuoteResponseDto> GeneratePdfQuoteAsync(PdfQuoteRequestDto request);
 }
