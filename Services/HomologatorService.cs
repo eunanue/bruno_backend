@@ -17,7 +17,7 @@ public class HomologatorService : IHomologatorService
         _logger = logger;
     }
 
-    public async Task<ChubbCatalogResponseDto> GetMakesSubmakesAsync()
+    public async Task<CatalogResponseDto> GetMakesSubmakesAsync()
     {
         try
         {
@@ -26,7 +26,7 @@ public class HomologatorService : IHomologatorService
             if (string.IsNullOrEmpty(host))
             {
                 _logger.LogError("Bruno API configuration is missing in appsettings.json");
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = false,
                     Message = "API configuration is missing"
@@ -58,7 +58,7 @@ public class HomologatorService : IHomologatorService
             if (response.IsSuccessStatusCode)
             {
                 var data = JsonSerializer.Deserialize<object>(content);
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = true,
                     Data = data,
@@ -67,7 +67,7 @@ public class HomologatorService : IHomologatorService
             }
 
             _logger.LogError($"Bruno API Error - Status: {response.StatusCode}, Content: {content}");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"External API error: {response.StatusCode}"
@@ -76,7 +76,7 @@ public class HomologatorService : IHomologatorService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in GetMakesSubmakesAsync when calling Bruno API");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"Internal error: {ex.Message}"
@@ -84,7 +84,7 @@ public class HomologatorService : IHomologatorService
         }
     }
 
-    public async Task<ChubbCatalogResponseDto> GetVehicleTypesAsync(int makeId, int subMakeId, int model)
+    public async Task<CatalogResponseDto> GetVehicleTypesAsync(int makeId, int subMakeId, int model)
     {
         try
         {
@@ -93,7 +93,7 @@ public class HomologatorService : IHomologatorService
             if (string.IsNullOrEmpty(host))
             {
                 _logger.LogError("Bruno API configuration is missing in appsettings.json");
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = false,
                     Message = "API configuration is missing"
@@ -126,7 +126,7 @@ public class HomologatorService : IHomologatorService
             if (response.IsSuccessStatusCode)
             {
                 var data = JsonSerializer.Deserialize<object>(content);
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = true,
                     Data = data,
@@ -135,7 +135,7 @@ public class HomologatorService : IHomologatorService
             }
 
             _logger.LogError($"Bruno API Error - Status: {response.StatusCode}, Content: {content}");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"External API error: {response.StatusCode}"
@@ -144,7 +144,7 @@ public class HomologatorService : IHomologatorService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in GetVehicleTypesAsync when calling Bruno API");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"Internal error: {ex.Message}"
@@ -152,7 +152,7 @@ public class HomologatorService : IHomologatorService
         }
     }
 
-    public async Task<ChubbCatalogResponseDto> GetVehicleDescriptionsAsync(int vehicleTypeId, int model)
+    public async Task<CatalogResponseDto> GetVehicleDescriptionsAsync(int vehicleTypeId, int model)
     {
         try
         {
@@ -161,7 +161,7 @@ public class HomologatorService : IHomologatorService
             if (string.IsNullOrEmpty(host))
             {
                 _logger.LogError("Bruno API configuration is missing in appsettings.json");
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = false,
                     Message = "API configuration is missing"
@@ -194,7 +194,7 @@ public class HomologatorService : IHomologatorService
             if (response.IsSuccessStatusCode)
             {
                 var data = JsonSerializer.Deserialize<object>(content);
-                return new ChubbCatalogResponseDto
+                return new CatalogResponseDto
                 {
                     Success = true,
                     Data = data,
@@ -203,7 +203,7 @@ public class HomologatorService : IHomologatorService
             }
 
             _logger.LogError($"Bruno API Error - Status: {response.StatusCode}, Content: {content}");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"External API error: {response.StatusCode}"
@@ -212,7 +212,7 @@ public class HomologatorService : IHomologatorService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in GetVehicleDescriptionsAsync when calling Bruno API");
-            return new ChubbCatalogResponseDto
+            return new CatalogResponseDto
             {
                 Success = false,
                 Message = $"Internal error: {ex.Message}"

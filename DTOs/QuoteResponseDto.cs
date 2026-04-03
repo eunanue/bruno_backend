@@ -1,6 +1,6 @@
 namespace bruno_backend.DTOs;
 
-public class ChubbCatalogResponseDto
+public class QuoteResponseDto
 {
     public bool Success { get; set; }
     public object? Data { get; set; }

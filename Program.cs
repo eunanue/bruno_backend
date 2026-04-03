@@ -25,6 +25,9 @@ try
 
     builder.Services.AddHttpClient<IUtilsService, UtilsService>();
     builder.Services.AddHttpClient<IHomologatorService, HomologatorService>();
+    builder.Services.AddHttpClient<IPriceService, PriceService>();
+    builder.Services.AddHttpClient<IEmissionService, EmissionService>();
+    builder.Services.AddHttpClient<IRecoveryService, RecoveryService>();
 
     var app = builder.Build();
 
