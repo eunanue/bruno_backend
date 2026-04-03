@@ -24,6 +24,7 @@ try
     builder.Services.AddSwaggerGen();
 
     builder.Services.AddHttpClient<IUtilsService, UtilsService>();
+    builder.Services.AddHttpClient<IHomologatorService, HomologatorService>();
 
     var app = builder.Build();
 
