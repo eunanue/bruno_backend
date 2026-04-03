@@ -18,11 +18,9 @@ try
 
     // Add Serilog
     builder.Host.UseSerilog();
-
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
     builder.Services.AddHttpClient<IUtilsService, UtilsService>();
     builder.Services.AddHttpClient<IHomologatorService, HomologatorService>();
     builder.Services.AddHttpClient<IPriceService, PriceService>();
@@ -31,13 +29,23 @@ try
 
     var app = builder.Build();
 
+    // PathBase configurable por ambiente
+    var pathBase = builder.Configuration["AppSettings:PathBase"];
+    if (!string.IsNullOrEmpty(pathBase))
+    {
+        app.UsePathBase(pathBase);
+        app.UseRouting();
+    }
+
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        var swaggerPrefix = string.IsNullOrEmpty(pathBase) ? "" : pathBase;
+        c.SwaggerEndpoint($"{swaggerPrefix}/swagger/v1/swagger.json", "Bruno Backend v1");
+    });
 
     app.MapControllers();
-
     app.MapGet("/", () => "Hello World!");
-
     app.Run();
 }
 catch (Exception ex)
